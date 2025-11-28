@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
+import { fetchAPI } from '../config/api';
 
 export default function CreatePost() {
   const [file, setFile] = useState(null);
@@ -59,18 +60,13 @@ export default function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/post/create`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetchAPI('/api/post/create', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      });
+      
       const data = await res.json();
+      
       if (!res.ok) {
         setPublishError(data.message);
         return;
